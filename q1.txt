@@ -1,0 +1,23 @@
+1. All strings with exactly one 'a'
+
+b*ab*
+
+2. All strings with no more than three 'a's
+
+b*|b*ab*|b*ab*ab*|b*ab*ab*ab*
+
+3.a. L = { w: |w| mod 3 = 0 }
+
+((a|b)(a|b)(a|b))*
+
+3.b. L = { w: |w| mod 5 != 0 }
+
+((a|b)(a|b)(a|b)(a|b)(a|b))*((a|b)|(a|b)(a|b)|(a|b)(a|b)(a|b)|(a|b)(a|b)(a|b)(a|b))
+
+3.c. L = { w: n_a(w) mod 3 > 1 }
+
+(b*ab*ab*ab*)*ab*ab*
+
+4 a^n: n >= 0, n != 4
+
+a|aa|aaa|aaaaa*
