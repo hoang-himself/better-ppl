@@ -54,8 +54,7 @@ program:
 
 Include: '#include';
 InternalLib:
-	InEq SCharSequence InEq
-	| Quote SCharSequence Quote;
+	(InEq SCharSequence InEq | Quote SCharSequence Quote) {self.text = self.text[1:-1]};
 If: 'if';
 While: 'while';
 Using: 'using';
