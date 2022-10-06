@@ -16,18 +16,16 @@ def checkLexeme(lexer, inputFile, outputFile):
     finally:
         dest.close()
 
-    dest = open(outputFile, "r")
-    line = dest.read()
-    print(line)
+    # dest = open(outputFile,"r")
+    # line = dest.read()
+    # print("\"" + line + "\"")
 
 
 def printLexeme(lexer):
     tok = lexer.nextToken()
     if tok.type != Token.EOF:
-        return (
-            "<" + lexer.symbolicNames[tok.type] + ", \"" + tok.text + "\">\n" +
-            printLexeme(lexer)
-        ).strip()
+        return (lexer.symbolicNames[tok.type] + " " +
+                printLexeme(lexer)).strip()
     else:
         return ""
 
