@@ -11,4 +11,8 @@ int main() {
     }
 
     return 0;
+    int x = 'a';
+    int x = -5.0;
+    int x = 6.7f;
+    int x = 9.87654e+06;
 }

@@ -1,0 +1,1 @@
+Include InternalLib Using NameSpace Id Semi Int Main OpenPara ClosePara OpenBraket Int Id Assignment Integer Semi While OpenPara Id InEq Integer ClosePara OpenBraket Cout InternalLib InternalLib Semi Inc Id Semi CloseBraket Return Integer Semi Int Id Assignment InternalLib Semi Int Id Assignment Float Semi Int Id Assignment Float Id Semi Int Id Assignment Float Semi CloseBraket
