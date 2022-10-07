@@ -26,7 +26,7 @@ options {
 
 program:
 	(
-		Include InternalLib
+		(Include InternalLib)
 		| If
 		| While
 		| Using
@@ -53,8 +53,7 @@ program:
 	)* EOF;
 
 Include: '#include';
-InternalLib:
-	(InEq SCharSequence InEq | Quote SCharSequence Quote) {self.text = self.text[1:-1]};
+InternalLib: '<' SCharSequence '>' {self.text = self.text[1:-1]};
 If: 'if';
 While: 'while';
 Using: 'using';
@@ -87,11 +86,9 @@ fragment FloatExpLiteral: [Ee] Sign? Digit+;
 
 Integer: Sign? Digit+;
 
-String: Quote SCharSequence Quote {self.text = self.text[1:-1]};
+String: '"' SCharSequence '"' {self.text = self.text[1:-1]};
 
-Char: Quote SChar Quote {self.text = self.text[1:-1]};
-
-Quote: '"' | '\'';
+Char: '\'' SChar '\'' {self.text = self.text[1:-1]};
 
 fragment EscapeSequence: '\\' [bfrnt'"\\];
 fragment IllegalEscapeSequence: '\\' ~[bfrnt'"\\];
