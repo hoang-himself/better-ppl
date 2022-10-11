@@ -1,9 +1,12 @@
+import importlib
 import sys, os
 from antlr4 import *
 from antlr4.error.ErrorListener import ConsoleErrorListener, ErrorListener
 from lexererr import *
 
-TARGET = '../CompiledLanguage'
+TARGET_DIR = '../CompiledLanguage'
+TESTCASE_DIR = '../Testcases'
+ANSWER_DIR = '../Answers'
 
 
 def checkLexeme(lexer, inputFile, outputFile):
@@ -74,31 +77,47 @@ def checkParser(lexerAgent, parserAgent, inputFile, outputFile):
     # print(line)
 
 
-def main(argv):
-    if len(argv) < 1:
+def main(*args, **kwargs):
+    if len(args) < 1:
         printUsage()
-    elif len(argv) < 3:
-        if os.path.isdir(TARGET) and not TARGET in sys.path:
-            sys.path.append(TARGET)
+    elif len(args) < 4:
+        if os.path.isdir(TARGET_DIR) and not TARGET_DIR in sys.path:
+            sys.path.append(TARGET_DIR)
+        # Not the best I can do but I don't care
+        LANGUAGE_NAME = args[0][0][:-3]
 
-        from BKITLexer import BKITLexer
-        from BKITParser import BKITParser
+        MyLexer = getattr(
+            importlib.import_module(LANGUAGE_NAME + "Lexer"),
+            LANGUAGE_NAME + "Lexer"
+        )
+        MyParser = getattr(
+            importlib.import_module(LANGUAGE_NAME + "Parser"),
+            LANGUAGE_NAME + "Parser"
+        )
 
-        inputFile = argv[0]
-
-        if len(argv) == 1:
-            outputFile = "result.txt"
+        # TODO Split lexeme and parser tests
+        if len(args) == 1:
+            file_name_list = os.listdir(TESTCASE_DIR)
+            for file_name in file_name_list:
+                if file_name.endswith(".txt"):
+                    checkParser(
+                        MyLexer, MyParser, TESTCASE_DIR + "/" + file_name,
+                        ANSWER_DIR + "/" + file_name
+                    )
         else:
-            outputFile = argv[1]
-
-        checkParser(BKITLexer, BKITParser, inputFile, outputFile)
+            inputFile = args[1]
+            if len(args) == 2:
+                outputFile = "result.txt"
+            else:
+                outputFile = args[2]
+            checkParser(MyLexer, MyParser, inputFile, outputFile)
 
     else:
         printUsage()
 
 
 def printUsage():
-    print("python run.py TESTCASE_FILE [OUTPUT_FILE]")
+    print("python run.py LANGUAGE.g4 [TESTCASE_FILE [OUTPUT_FILE]]")
 
 
 if __name__ == "__main__":
