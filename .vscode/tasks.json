@@ -9,7 +9,7 @@
       "command": "python",
       "args": ["gen.py", "${fileBasename}"],
       "options": {
-        "cwd": "${workspaceFolder}/LexerGenerator"
+        "cwd": "${workspaceFolder}/LanguageGenerator"
       },
       "group": {
         "kind": "build",
