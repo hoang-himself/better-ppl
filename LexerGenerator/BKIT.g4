@@ -30,17 +30,15 @@ stmtList: stmt*;
 
 stmt: exprList Semi;
 
-Semi: ';';
-
 exprList: expr*;
 
 expr: metaDecl | term;
 
 metaDecl: metaType declList;
 
-declList: decl (',' decl)* |;
+declList: decl (Comma decl)* |;
 
-decl: IdLit '=' term;
+decl: IdLit (Assign term)?;
 
 metaType: FloatType | IntType;
 
@@ -59,6 +57,10 @@ fragment FloatExpLit: [Ee] Sign? IntLit+;
 Sign: [+-];
 IntLit: [0-9]+;
 IdLit: [a-z]+;
+
+Semi: ';';
+Comma: ',';
+Assign: '=';
 
 WS: [ \t\r\n]+ -> skip; // skip spaces, tabs, newlines
 
