@@ -1,35 +1,7 @@
 import sys, os
-from antlr4 import *
-from lexererr import *
+from utils import *
 
 TARGET = '../CompiledLanguage'
-
-
-def checkLexeme(lexer, inputFile, outputFile):
-    dest = open(outputFile, "w")
-    lexer = lexer(FileStream(inputFile))
-    try:
-        out = printLexeme(lexer)
-        dest.write(out)
-    except LexerError as err:
-        dest.write(err.message)
-    finally:
-        dest.close()
-
-    dest = open(outputFile, "r")
-    line = dest.read()
-    print(line)
-
-
-def printLexeme(lexer):
-    tok = lexer.nextToken()
-    if tok.type != Token.EOF:
-        return (
-            "<" + lexer.symbolicNames[tok.type] + ", \"" + tok.text + "\">\n" +
-            printLexeme(lexer)
-        ).strip()
-    else:
-        return ""
 
 
 def main(argv):
@@ -40,6 +12,7 @@ def main(argv):
             sys.path.append(TARGET)
 
         from BKITLexer import BKITLexer
+        from BKITParser import BKITParser
 
         inputFile = argv[0]
 
@@ -48,7 +21,7 @@ def main(argv):
         else:
             outputFile = argv[1]
 
-        checkLexeme(BKITLexer, inputFile, outputFile)
+        checkParser(BKITLexer, BKITParser, inputFile, outputFile)
 
     else:
         printUsage()
