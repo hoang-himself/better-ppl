@@ -1,5 +1,6 @@
 import sys, os
 from antlr4 import *
+from antlr4.error.ErrorListener import ConsoleErrorListener, ErrorListener
 from lexererr import *
 
 TARGET = '../CompiledLanguage'
@@ -16,20 +17,61 @@ def checkLexeme(lexer, inputFile, outputFile):
     finally:
         dest.close()
 
-    dest = open(outputFile, "r")
-    line = dest.read()
-    print(line)
+    # dest = open(outputFile,"r")
+    # line = dest.read()
+    # print("\"" + line + "\"")
 
 
 def printLexeme(lexer):
     tok = lexer.nextToken()
     if tok.type != Token.EOF:
-        return (
-            "<" + lexer.symbolicNames[tok.type] + ", \"" + tok.text + "\">\n" +
-            printLexeme(lexer)
-        ).strip()
+        return (lexer.symbolicNames[tok.type] + " " +
+                printLexeme(lexer)).strip()
     else:
         return ""
+
+
+class NewErrorListener(ConsoleErrorListener):
+    INSTANCE = None
+
+    def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
+        raise SyntaxException(
+            "Error on line " + str(line) + " col " + str(column) + ": " +
+            offendingSymbol.text
+        )
+
+
+NewErrorListener.INSTANCE = NewErrorListener()
+
+
+class SyntaxException(Exception):
+    def __init__(self, msg):
+        self.message = msg
+
+
+def checkParser(lexerAgent, parserAgent, inputFile, outputFile):
+    dest = open(outputFile, "w")
+    lexer = lexerAgent(FileStream(inputFile))
+    listener = NewErrorListener.INSTANCE
+    tokens = CommonTokenStream(lexer)
+    parser = parserAgent(tokens)
+    parser.removeErrorListeners()
+    parser.addErrorListener(listener)
+
+    try:
+        parser.program()
+
+    except SyntaxException as f:
+        dest.write(f.message + '\n')
+    except Exception as e:
+        dest.write(str(e) + '\n')
+    finally:
+        dest.write("complete!")
+        dest.close()
+
+    # dest = open(outputFile,"r")
+    # line = dest.read()
+    # print(line)
 
 
 def main(argv):
@@ -40,6 +82,7 @@ def main(argv):
             sys.path.append(TARGET)
 
         from BKITLexer import BKITLexer
+        from BKITParser import BKITParser
 
         inputFile = argv[0]
 
@@ -48,7 +91,7 @@ def main(argv):
         else:
             outputFile = argv[1]
 
-        checkLexeme(BKITLexer, inputFile, outputFile)
+        checkParser(BKITLexer, BKITParser, inputFile, outputFile)
 
     else:
         printUsage()
