@@ -24,35 +24,41 @@ options {
 	language = Python3;
 }
 
-program: statementList EOF;
+program: stmtList EOF;
 
-statementList: statement*;
+stmtList: stmt*;
 
-statement: expressionList Semi;
+stmt: exprList Semi;
 
 Semi: ';';
 
-expressionList: expression*;
+exprList: expr*;
 
-expression: metaType IdLiteral '=' term | term;
+expr: metaDecl | term;
 
-metaType: IntegerType | FloatType;
+metaDecl: metaType declList;
 
-term: FloatLiteral | IntegerLiteral | IdLiteral;
+declList: decl (',' decl)* |;
 
-IntegerType: 'int';
+decl: IdLit '=' term;
+
+metaType: FloatType | IntType;
+
+term: FloatLit | IntLit | IdLit;
+
+IntType: 'int';
 FloatType: 'float';
 
-FloatLiteral:
-	FloatIntLiteral FloatDecLiteral
-	| (FloatIntLiteral | FloatDecLiteral) FloatExpLiteral
-	| FloatIntLiteral FloatDecLiteral FloatExpLiteral;
-fragment FloatIntLiteral: Sign? IntegerLiteral+;
-fragment FloatDecLiteral: '.' IntegerLiteral+;
-fragment FloatExpLiteral: [Ee] Sign? IntegerLiteral+;
+FloatLit:
+	FloatIntLit FloatDecLit
+	| (FloatIntLit | FloatDecLit) FloatExpLit
+	| FloatIntLit FloatDecLit FloatExpLit;
+fragment FloatIntLit: Sign? IntLit+;
+fragment FloatDecLit: '.' IntLit+;
+fragment FloatExpLit: [Ee] Sign? IntLit+;
 Sign: [+-];
-IntegerLiteral: [0-9]+;
-IdLiteral: [a-z]+;
+IntLit: [0-9]+;
+IdLit: [a-z]+;
 
 WS: [ \t\r\n]+ -> skip; // skip spaces, tabs, newlines
 
