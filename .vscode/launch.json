@@ -5,13 +5,13 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "ANTLR: Test LexerSuite",
+      "name": "ANTLR: Test Current",
       "type": "python",
       "request": "launch",
       "cwd": "${workspaceFolder}/FinalProgram",
       "program": "run.py",
       "args": [
-        "testcase.txt"
+        "${fileBasename}"
       ]
     }
   ]
