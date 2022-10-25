@@ -83,7 +83,9 @@ def main(*args, **kwargs):
     elif len(args) < 4:
         if os.path.isdir(TARGET_DIR) and not TARGET_DIR in sys.path:
             sys.path.append(TARGET_DIR)
-        # Not the best I can do but I don't care
+        if (args[0][0][-3:] != '.g4'):
+            print("Not a .g4 file")
+            return 1
         LANGUAGE_NAME = args[0][0][:-3]
 
         MyLexer = getattr(
@@ -118,6 +120,7 @@ def main(*args, **kwargs):
 
 def printUsage():
     print("python run.py LANGUAGE.g4 [TESTCASE_FILE [OUTPUT_FILE]]")
+    return 1
 
 
 if __name__ == "__main__":
