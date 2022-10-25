@@ -3,7 +3,11 @@
 using namespace std;
 
 int main() {
-    int i;
+    float i = 9.0;
+    int j;
+
+    while (4 == i) {
+    }
 
     return 0;
 }

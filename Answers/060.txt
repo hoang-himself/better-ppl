@@ -1,0 +1,2 @@
+Error on line 6 col 4: while
+complete!
