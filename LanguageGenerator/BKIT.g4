@@ -24,20 +24,56 @@ options {
 	language = Python3;
 }
 
-program: varDeclStmt EOF;
+program: libIncl nsDef mainFunc EOF;
 
-varDeclStmt: typeInd Id Assignment primaryLiteral Semi;
+libIncl: libIncl libInclStmt |;
 
-typeInd: Int | Flt;
+libInclStmt: Include InternalLib;
 
-primaryLiteral: integerLiteral | floatLiteral;
+nsDef: nsDef nsDefStmt |;
 
-integerLiteral: Integer;
-floatLiteral: Float;
+nsDefStmt: Using NameSpace Id Semi;
 
+mainFunc: Int Main OpenPara ClosePara mainBlock;
+mainBlock: OpenBraket declStmt+ allStmt* returnStmt CloseBraket;
+allStmt: asgStmt | declStmt | whileStmt | incStmt | ioStmt;
+
+whileStmt: While OpenPara expr? ClosePara stmtBlock;
+declStmt: allType Id (Assignment allLiteral)? Semi;
+returnStmt: Return (Integer | Id)? Semi;
+asgStmt: Id Assignment allLiteral Semi;
+
+stmtBlock: OpenBraket allStmt* CloseBraket;
+incStmt: (Inc Id | Id Inc) Semi;
+ioStmt: Cout Shift (allLiteral | Id) Semi;
+
+expr: compareExpr;
+compareExpr: (allLiteral | Id) (InEq | Eq) (allLiteral | Id);
+
+allType: Int | Flt;
+allLiteral: Integer | Float | String | Char;
+
+Include: '#include';
+If: 'if';
+While: 'while';
+Using: 'using';
+NameSpace: 'namespace';
+Cout: 'cout';
+InternalLib: '<' (~['"\\\r\n>< ] | EscapeSequence)+ '>';
 Int: 'int';
 Flt: 'float';
+Main: 'main';
+Return: 'return';
+
 Semi: ';';
+OpenPara: '(';
+ClosePara: ')';
+OpenBraket: '{';
+CloseBraket: '}';
+Shift: '<<';
+InEq: '>' | '<' | '>=' | '<=';
+Inc: '++' | '--';
+Eq: '==' | '!=';
 Assignment: '=';
 
 Id: NonDigit ( NonDigit | Digit)*;
@@ -50,13 +86,33 @@ Float:
 		| DigitSequence ExponentPart FloatingPart?
 	);
 
+String:
+	'"' SCharSequence? '"' {
+      self.text = self.text[1:-1]
+    };
+
+Char:
+	'\'' SCharChar '\'' {
+      self.text = self.text[1:-1]
+    };
+
+fragment EscapeSequence: '\\' [bfrnt'"\\];
+
+fragment IllegalEscapeSequence: '\\' ~[bfrnt'"\\];
+
+fragment SCharSequence: SCharString+;
+
+fragment SCharString: ~["\\\r\n] | EscapeSequence;
+
+fragment SCharChar: ~['\\\r\n] | EscapeSequence;
+
 fragment FragtionalConstant:
 	DigitSequence '.' DigitSequence
 	| DigitSequence '.';
 
 fragment ExponentPart: [eE] Sign? DigitSequence;
 
-fragment FloatingPart: 'f' | 'F';
+fragment FloatingPart: 'f';
 
 fragment Sign: '+' | '-';
 
@@ -71,6 +127,13 @@ fragment NonZeroDigit: [1-9];
 Skip: (([ \t\r\n]+) | ('//' .*?)) -> skip;
 
 ERROR_CHAR: .;
-UNCLOSE_STRING: .;
-ILLEGAL_ESCAPE: .;
+
+UNCLOSE_STRING:
+	'"' SCharSequence? {
+      self.text = self.text[1:]
+    };
+ILLEGAL_ESCAPE:
+	'"' SCharSequence? IllegalEscapeSequence {
+      self.text = self.text[1:]
+    };
 UNTERMINATED_COMMENT: .;
