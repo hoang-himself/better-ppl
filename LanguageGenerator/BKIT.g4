@@ -24,10 +24,12 @@ options {
 	language = Python3;
 }
 
-program: idTerm EOF;
+program: (idTerm Add idTerm | idTerm Sub idTerm) EOF;
 
 idTerm: Identifier;
 
+Add: '+';
+Sub: '-';
 Identifier: [a-z]+;
 
 WS: [ \t\r\n]+ -> skip; // skip spaces, tabs, newlines
