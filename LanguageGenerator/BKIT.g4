@@ -24,51 +24,13 @@ options {
 	language = Python3;
 }
 
-program: varDeclStmt EOF;
+program: idTerm EOF;
 
-varDeclStmt: typeInd Id Assignment primaryLiteral Semi;
+idTerm: Identifier;
 
-typeInd: Int | Flt;
+Identifier: [a-z]+;
 
-primaryLiteral: integerLiteral | floatLiteral;
-
-integerLiteral: Integer;
-floatLiteral: Float;
-
-Int: 'int';
-Flt: 'float';
-Semi: ';';
-Assignment: '=';
-
-Id: NonDigit ( NonDigit | Digit)*;
-
-Integer: Sign? ( NonZeroDigit Digit* | '0');
-
-Float:
-	Sign? (
-		FragtionalConstant ExponentPart? FloatingPart?
-		| DigitSequence ExponentPart FloatingPart?
-	);
-
-fragment FragtionalConstant:
-	DigitSequence '.' DigitSequence
-	| DigitSequence '.';
-
-fragment ExponentPart: [eE] Sign? DigitSequence;
-
-fragment FloatingPart: 'f' | 'F';
-
-fragment Sign: '+' | '-';
-
-fragment DigitSequence: Digit+;
-
-fragment NonDigit: [a-zA-Z_];
-
-fragment Digit: [0-9];
-
-fragment NonZeroDigit: [1-9];
-
-Skip: (([ \t\r\n]+) | ('//' .*?)) -> skip;
+WS: [ \t\r\n]+ -> skip; // skip spaces, tabs, newlines
 
 ERROR_CHAR: .;
 UNCLOSE_STRING: .;
