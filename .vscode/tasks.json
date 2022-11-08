@@ -7,7 +7,7 @@
       "label": "ANTLR: Generate",
       "type": "shell",
       "command": "python",
-      "args": ["gen.py", "${fileBasename}"],
+      "args": ["gen.py", "BKIT.g4"],
       "options": {
         "cwd": "${workspaceFolder}/LanguageGenerator"
       },

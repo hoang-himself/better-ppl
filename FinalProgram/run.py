@@ -1,4 +1,3 @@
-import importlib
 import sys, os
 from utils import *
 
@@ -8,47 +7,35 @@ ANSWER_DIR = '../Answers'
 
 
 def main(argv):
-    if len(argv) < 1:
-        printUsage()
-    elif len(argv) < 4:
-        if os.path.isdir(TARGET_DIR) and not TARGET_DIR in sys.path:
-            sys.path.append(TARGET_DIR)
-        if (argv[0][0][-3:] != '.g4'):
-            print("Not a .g4 file")
-            return 1
-        LANGUAGE_NAME = argv[0][0][:-3]
+    if os.path.isdir(TARGET_DIR) and not TARGET_DIR in sys.path:
+        sys.path.append(TARGET_DIR)
+    from BKITLexer import BKITLexer
+    from BKITParser import BKITParser
 
-        MyLexer = getattr(
-            importlib.import_module(LANGUAGE_NAME + "Lexer"),
-            LANGUAGE_NAME + "Lexer"
-        )
-        MyParser = getattr(
-            importlib.import_module(LANGUAGE_NAME + "Parser"),
-            LANGUAGE_NAME + "Parser"
-        )
+    if len(argv) < 2:
+        file_name_list = os.listdir(TESTCASE_DIR)
+        for file_name in file_name_list:
+            if file_name.endswith(".txt"):
+                checkAST(
+                    BKITLexer, BKITParser, TESTCASE_DIR + "/" + file_name,
+                    ANSWER_DIR + "/" + file_name
+                )
+    elif len(argv) < 3:
+
+        inputFile = argv[0]
 
         if len(argv) == 1:
-            file_name_list = os.listdir(TESTCASE_DIR)
-            for file_name in file_name_list:
-                if file_name.endswith(".txt"):
-                    checkAST(
-                        MyLexer, MyParser, TESTCASE_DIR + "/" + file_name,
-                        ANSWER_DIR + "/" + file_name
-                    )
+            outputFile = "result.txt"
         else:
-            inputFile = argv[1]
-            if len(argv) == 2:
-                outputFile = "result.txt"
-            else:
-                outputFile = argv[2]
-            checkAST(MyLexer, MyParser, inputFile, outputFile)
+            outputFile = argv[1]
+            checkAST(BKITLexer, BKITParser, inputFile, outputFile)
+
     else:
         printUsage()
 
 
 def printUsage():
-    print("python run.py LANGUAGE.g4 [TESTCASE_FILE [OUTPUT_FILE]]")
-    return 1
+    print("python run.py TESTCASE_FILE [OUTPUT_FILE]")
 
 
 if __name__ == "__main__":

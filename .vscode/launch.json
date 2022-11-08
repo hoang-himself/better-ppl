@@ -11,7 +11,7 @@
       "cwd": "${workspaceFolder}/FinalProgram",
       "program": "run.py",
       "args": [
-        "${fileBasename}"
+        "BKIT.g4"
       ]
     }
   ]
