@@ -8,8 +8,16 @@ class ASTGeneration(BKITVisitor):
         '''
             Prog: dataclass in ASTUtils
         '''
-        id = ctx.idTerm().accept(self)
-        return Prog(id)
+        if ctx.idTerm():
+            return Prog(ctx.idTerm().accept(self))
+        elif ctx.intTerm():
+            return Prog(ctx.intTerm().accept(self))
+
+    def visitIntTerm(self, ctx: BKITParser.IntTermContext):
+        '''
+            Int: dataclass in ASTUtils
+        '''
+        return Int(int(ctx.Integer().getText()))
 
     def visitIdTerm(self, ctx: BKITParser.IdTermContext):
         '''

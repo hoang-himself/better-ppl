@@ -22,6 +22,14 @@ class Id(Exp):
 
 
 @dataclass
+class Int(Exp):
+    value: int
+
+    def __str__(self):
+        return "INT(%d)" % self.value
+
+
+@dataclass
 class Prog(AST):
     expr: Exp
 
