@@ -161,4 +161,6 @@ cython_debug/
 
 .antlr/
 CompiledLanguage/*
+Testcases/*
+Answers/*
 !.gitkeep
