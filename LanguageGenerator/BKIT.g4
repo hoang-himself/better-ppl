@@ -24,10 +24,20 @@ options {
 	language = Python3;
 }
 
-program: idTerm EOF;
+program: expression EOF;
 
+expression: idTerm Add term | idTerm Sub term | term;
+
+term: idTerm | intTerm | LeftParen expression RightParen;
+
+intTerm: Integer;
 idTerm: Identifier;
 
+Add: '+';
+Sub: '-';
+LeftParen: '(';
+RightParen: ')';
+Integer: [1-9][0-9]* | [0];
 Identifier: [a-z]+;
 
 WS: [ \t\r\n]+ -> skip; // skip spaces, tabs, newlines
