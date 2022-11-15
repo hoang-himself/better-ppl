@@ -24,10 +24,13 @@ options {
 	language = Python3;
 }
 
-program: idTerm EOF;
+program: (idTerm | intTerm) EOF;
 
+intTerm: Integer | Sub Integer;
 idTerm: Identifier;
 
+Sub: '-';
+Integer: [1-9][0-9]* | [0];
 Identifier: [a-z]+;
 
 WS: [ \t\r\n]+ -> skip; // skip spaces, tabs, newlines

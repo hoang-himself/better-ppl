@@ -22,6 +22,23 @@ class Id(Exp):
 
 
 @dataclass
+class Int(Exp):
+    value: int
+
+    def __str__(self):
+        return "INT(%d)" % self.value
+
+
+@dataclass
+class UnaryOp(Exp):
+    op: str
+    body: Exp
+
+    def __str__(self):
+        return 'UnaryOp("' + self.op + '",' + str(self.body) + ")"
+
+
+@dataclass
 class Prog(AST):
     expr: Exp
 
