@@ -4,7 +4,7 @@ from functools import reduce
 
 class CodeRunner:
     def visitProgram(self, ctx: Prog):
-        return "\n".join([str(expr.accept(self)) for expr in ctx.expr])
+        return str(ctx.expr.accept(self))
 
     def visitBinaryOp(self, ctx: BinOp):
         left = ctx.left.accept(self)

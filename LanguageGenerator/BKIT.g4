@@ -24,15 +24,15 @@ options {
 	language = Python3;
 }
 
-intTerm: Integer;
-
-factor: intTerm;
-
-term: term (Mul | Div) factor | factor;
+program: expression EOF;
 
 expression: expression (Add | Sub) term | term;
 
-program: expression EOF;
+term: term (Mul | Div) factor | factor;
+
+factor: intTerm;
+
+intTerm: Integer;
 
 Add: '+';
 Sub: '-';

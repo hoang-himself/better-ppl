@@ -6,7 +6,7 @@ from functools import reduce
 
 class ASTGeneration(BKITVisitor):
     def visitProgram(self, ctx: BKITParser.ProgramContext):
-        return Prog([ctx.expression().accept(self)])
+        return Prog(ctx.expression().accept(self))
 
     def visitExpression(self, ctx: BKITParser.ExpressionContext):
         if ctx.expression():

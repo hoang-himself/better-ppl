@@ -48,10 +48,10 @@ class BinOp(Exp):
 
 @dataclass
 class Prog(AST):
-    expr: List[Exp]
+    expr: Exp
 
     def __str__(self):
-        return "Prog(" + printlist(self.expr, start="", end="") + ")"
+        return "Prog(" + str(self.expr) + ")"
 
     def accept(self, v):
         return v.visitProgram(self)
