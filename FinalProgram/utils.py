@@ -37,6 +37,7 @@ def checkAST(lexerAgent, parserAgent, inputFile, outputFile):
 
     tokens = CommonTokenStream(lexer)
     parser = parserAgent(tokens)
+    asttree = None
 
     try:
         tree = parser.program()
@@ -58,4 +59,25 @@ def checkAST(lexerAgent, parserAgent, inputFile, outputFile):
 
     dest = open(outputFile, "r")
     line = dest.read()
-    print(line)
+    print("AST Tree:", line)
+
+    return asttree
+
+
+def runCode(astTree, outputFile):
+    dest = open(outputFile, "w")
+
+    try:
+        from CodeRunner import CodeRunner
+        code_runner = CodeRunner()
+        result = astTree.accept(code_runner)
+        dest.write(result)
+
+    except Exception as e:
+        dest.write(str(e))
+    finally:
+        dest.close()
+
+    dest = open(outputFile, "r")
+    line = dest.read()
+    print("Result:", line)

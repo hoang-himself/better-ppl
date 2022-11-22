@@ -4,6 +4,7 @@ from utils import *
 TARGET_DIR = '../CompiledLanguage'
 TESTCASE_DIR = '../Testcases'
 ANSWER_DIR = '../Answers'
+ASTTREE_DIR = '../ASTTrees'
 
 
 def main(argv):
@@ -16,10 +17,11 @@ def main(argv):
         file_name_list = os.listdir(TESTCASE_DIR)
         for file_name in file_name_list:
             if file_name.endswith(".txt"):
-                checkAST(
+                astTree = checkAST(
                     BKITLexer, BKITParser, TESTCASE_DIR + "/" + file_name,
                     ANSWER_DIR + "/" + file_name
                 )
+                runCode(astTree, ASTTREE_DIR + "/" + file_name)
     elif len(argv) < 3:
 
         inputFile = argv[0]
@@ -28,7 +30,9 @@ def main(argv):
             outputFile = "result.txt"
         else:
             outputFile = argv[1]
-            checkAST(BKITLexer, BKITParser, inputFile, outputFile)
+
+        astTree = checkAST(BKITLexer, BKITParser, inputFile, "asttree.txt")
+        runCode(astTree, outputFile)
 
     else:
         printUsage()
