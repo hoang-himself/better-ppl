@@ -17,6 +17,8 @@ class CodeRunner:
             return left * right
         elif ctx.op == "/":
             return left / right
+        elif ctx.op == "%":
+            return left % right
 
     def visitInteger(self, ctx: Int):
         return ctx.value
