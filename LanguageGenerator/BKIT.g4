@@ -24,22 +24,26 @@ options {
 	language = Python3;
 }
 
+program: expression EOF;
+
+expression: term (Add | Sub) expression | term;
+
+term: factor (Mul | Div | Mod) term | factor;
+
+factor: intTerm | idTerm;
+
 intTerm: Integer;
 
-factor: intTerm;
-
-term: term (Mul | Div) factor | factor;
-
-expression: expression (Add | Sub) term | term;
-
-program: expression EOF;
+idTerm: Identifier;
 
 Add: '+';
 Sub: '-';
 Mul: '*';
 Div: '/';
+Mod: '%';
 
 Integer: [0-9]+;
+Identifier: [a-zA-Z_][a-zA-Z0-9_]*;
 
 WS: [ \t\r\n]+ -> skip; // skip spaces, tabs, newlines
 

@@ -1,5 +1,6 @@
 from antlr4 import *
 from lexererr import *
+from stack import env
 
 
 ##### FOR LEXER #####
@@ -23,7 +24,7 @@ def printLexeme(lexer):
     tok = lexer.nextToken()
     if tok.type != Token.EOF:
         return (
-            "<" + lexer.symbolicNames[tok.type] + ", \"" + tok.text + "\">\n" +
+            "<" + lexer.symbolicNames[tok.type] + ', "' + tok.text + '">\n' +
             printLexeme(lexer)
         ).strip()
     else:
@@ -44,6 +45,7 @@ def checkAST(lexerAgent, parserAgent, inputFile, outputFile):
         # Now tree is an instance of BKITParser.ProgramContext
 
         from ASTGeneration import ASTGeneration
+
         ast_generator = ASTGeneration()
 
         # Because BKITParser.ProgramContext has implemented Visitor pattern with accept method,
@@ -69,6 +71,7 @@ def runCode(astTree, outputFile):
 
     try:
         from CodeRunner import CodeRunner
+
         code_runner = CodeRunner()
         result = astTree.accept(code_runner)
         dest.write(result)
@@ -81,3 +84,15 @@ def runCode(astTree, outputFile):
     dest = open(outputFile, "r")
     line = dest.read()
     print("Result:", line)
+
+
+class Env:
+    _env = env
+
+    @classmethod
+    def get(cls, name):
+        return cls._env[name]
+
+
+def lookup(string):
+    return Env.get(string)
