@@ -24,20 +24,24 @@ options {
 	language = Python3;
 }
 
-intTerm: Integer;
-
-factor: intTerm;
-
-term: term (Mul | Div) factor | factor;
-
-expression: expression (Add | Sub) term | term;
-
 program: expression EOF;
+
+expression: term (Add | Sub) expression | term;
+
+term: factor (Mul | Div | Mod) term | factor;
+
+factor: intTerm | LeftParenthesis expression RightParenthesis;
+
+intTerm: Integer;
 
 Add: '+';
 Sub: '-';
 Mul: '*';
 Div: '/';
+Mod: '%';
+
+LeftParenthesis: '(';
+RightParenthesis: ')';
 
 Integer: [0-9]+;
 
