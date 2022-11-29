@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod, ABCMeta
 from dataclasses import dataclass
-from typing import List, Tuple
 
 
 def printlist(lst, f=str, start="[", sepa=",", end="]"):
@@ -33,6 +32,18 @@ class Int(Exp):
 
 
 @dataclass
+class UnaryOp(Exp):
+    op: str
+    body: Exp
+
+    def __str__(self):
+        return 'UnaryOp("' + self.op + '",' + str(self.body) + ")"
+
+    def accept(self, v):
+        return v.visitUnaryOp(self)
+
+
+@dataclass
 class BinOp(Exp):
     op: str
     left: Exp
@@ -48,10 +59,10 @@ class BinOp(Exp):
 
 @dataclass
 class Prog(AST):
-    expr: List[Exp]
+    expr: Exp
 
     def __str__(self):
-        return "Prog(" + printlist(self.expr, start="", end="") + ")"
+        return "Prog(" + str(self.expr) + ")"
 
     def accept(self, v):
         return v.visitProgram(self)

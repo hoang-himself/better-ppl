@@ -4,7 +4,15 @@ from functools import reduce
 
 class CodeRunner:
     def visitProgram(self, ctx: Prog):
-        return "\n".join([str(expr.accept(self)) for expr in ctx.expr])
+        return str(ctx.expr.accept(self))
+
+    def visitInteger(self, ctx: Int):
+        return ctx.value
+
+    def visitUnaryOp(self, ctx: UnaryOp):
+        body = ctx.body.accept(self)
+        if ctx.op == "-":
+            return -body
 
     def visitBinaryOp(self, ctx: BinOp):
         left = ctx.left.accept(self)
@@ -17,6 +25,3 @@ class CodeRunner:
             return left * right
         elif ctx.op == "/":
             return left / right
-
-    def visitInteger(self, ctx: Int):
-        return ctx.value
